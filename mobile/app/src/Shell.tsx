@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import TabView, { SceneMap } from 'react-native-bottom-tabs'
 import { StyleSheet, Text, useColorScheme, View } from 'react-native'
 import TodayScreen from './TodayScreen'
+import ListScreen from './ListScreen'
 import { TABS } from './navigation'
 import { palette } from './ui/tokens'
 
@@ -41,8 +42,8 @@ export default function Shell({ onSignOut }: { onSignOut: () => void }) {
       onIndexChange={() => undefined}
       renderScene={SceneMap({
         today: () => <StackOf name="today"><TodayScreen onSignOut={onSignOut} /></StackOf>,
-        inbox: () => <StackOf name="inbox"><Placeholder name="Inbox" /></StackOf>,
-        upcoming: () => <StackOf name="upcoming"><Placeholder name="Upcoming" /></StackOf>,
+        inbox: () => <StackOf name="inbox"><ListScreen kind="inbox" /></StackOf>,
+        upcoming: () => <StackOf name="upcoming"><ListScreen kind="upcoming" /></StackOf>,
         browse: () => <StackOf name="browse"><Placeholder name="Browse" /></StackOf>,
       })}
     />
