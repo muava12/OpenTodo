@@ -8,7 +8,7 @@ import { checkServer, UPDATE_GUIDE, type ServerCheck } from './server'
 import { signIn } from './nativeAuth'
 import { tokens } from './nativeAuth'
 import { startAccount, stopAccount } from './account'
-import TodayScreen from './TodayScreen'
+import Shell from './Shell'
 import type { Tokens } from './signIn'
 
 const palette = {
@@ -63,7 +63,7 @@ export default function App() {
     setResult(null)
   }, [])
 
-  if (account) return <TodayScreen onSignOut={() => void signOut()} />
+  if (account) return <Shell onSignOut={() => void signOut()} />
 
   return (
     <KeyboardAvoidingView behavior="padding" style={[styles.screen, { backgroundColor: c.bg }]}>

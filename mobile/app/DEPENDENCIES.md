@@ -20,6 +20,12 @@ Every package in `package.json`, with the reason it is there (OpenSpec change `n
 - `expo-secure-store`: the Keychain/Keystore for the app's tokens, never MMKV (design D5).
 - `expo-crypto`: the PKCE code verifier and `state` values (`src/signIn.ts`).
 - `expo-haptics`: the completion tap on the list (`src/haptics.ts`, the shared preference's platform side).
+- `react-native-screens`: the native navigation stack (`@react-navigation/native-stack`).
+- `@react-navigation/native`: the navigation container and hooks.
+- `@react-navigation/native-stack`: the native stack (UINavigationController / Fragment), edge-swipe back, large titles.
+- `react-native-bottom-tabs`: the platform's tab bar (UITabBarController / Material bottom navigation).
+- `react-native-gesture-handler`: the swipe actions and the drag the lists use.
+- `react-native-reanimated`: the animations on the UI thread (the tab transitions, the completion).
 - `dexie`: the local database's schema, which `web/src/lib/db.ts` declares on a Dexie instance, and the zones the adapter's transactions use (`src/storage/scope.ts`). Dexie never opens a database in the app; the adapter does.
 
 ## Overrides
