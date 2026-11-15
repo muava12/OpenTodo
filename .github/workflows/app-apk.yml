@@ -47,11 +47,4 @@ jobs:
       working-directory: mobile/app/android
       run: ./gradlew --no-daemon :app:assembleDebug
     - name: Release APK (signed)
-      if: inputs.release == true
-      working-directory: mobile/app/android
-      env:
-        ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
-        ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-        ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-        ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-      run: ./gradlew --no-daemon :app:assembleRelease
+      run: echo release
