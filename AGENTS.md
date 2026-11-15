@@ -1,5 +1,15 @@
 # Working on OpenTodo (guide for AI coding agents and humans)
 
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues (this repo: OpenTodoApp/OpenTodo), read and written with the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Domain docs
+
+Single-context: one `GLOSSARY.md` and ADRs in `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+
 ## What this is
 Open-source, self-hosted, local-first task manager that replaces subscription task apps. Go server + SQLite, React PWA embedded in the binary, field-level op-log sync. AGPL-3.0.
 

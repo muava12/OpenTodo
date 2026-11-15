@@ -15,6 +15,10 @@ Every package in `package.json`, with the reason it is there (OpenSpec change `n
 - `react-native-nitro-modules`: the native module bridge `react-native-mmkv` and `react-native-quick-crypto` are built on (peer dependency).
 - `@op-engineering/op-sqlite`: SQLite for the local database (design D4, task 4.3): the Dexie-subset adapter in `src/storage` runs every statement on the connection's own thread. 19.0.1, the newest release at least 14 days old, which the storage spike also ran.
 - `yjs`: the notes document model, which the shared `applyOps` loads to merge a pulled note (`web/src/lib/richtext.ts`); its `lib0` asks for a React Native crypto package, which Metro points at the app's Web Crypto (`src/stubs/webcrypto.ts`).
+- `expo-linking`: the `opentodo://` scheme the app's sign-in redirect lands on (`src/signIn.ts`).
+- `expo-web-browser`: the system authentication sheet (Custom Tab / `ASWebAuthenticationSession`) sign-in opens (`src/signIn.ts`).
+- `expo-secure-store`: the Keychain/Keystore for the app's tokens, never MMKV (design D5).
+- `expo-crypto`: the PKCE code verifier and `state` values (`src/signIn.ts`).
 - `dexie`: the local database's schema, which `web/src/lib/db.ts` declares on a Dexie instance, and the zones the adapter's transactions use (`src/storage/scope.ts`). Dexie never opens a database in the app; the adapter does.
 
 ## Overrides
