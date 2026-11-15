@@ -6,11 +6,8 @@ import { useCallback, useEffect, useState } from 'react'
 import { LegendList } from '@legendapp/list'
 import { Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native'
 import { todayRows, type TodayRow } from './today'
-
-const palette = {
-  light: { bg: '#ffffff', text: '#1c1c1e', muted: '#6e6e73', field: '#f2f2f7', accent: '#0a66d8', error: '#c4281c' },
-  dark: { bg: '#000000', text: '#f5f5f7', muted: '#98989d', field: '#1c1c1e', accent: '#4c9bff', error: '#ff6b5e' },
-}
+import { counts } from './counts'
+import { palette } from './ui/tokens'
 
 /** Today's date on the device, as the shared modules write it. */
 function today(): string {
@@ -48,7 +45,7 @@ function Row({ row, onComplete, last }: { row: TodayRow; onComplete: (r: TodayRo
       accessibilityRole="checkbox"
       accessibilityState={{ checked: false }}
       onPress={() => onComplete(row)}
-      style={({ pressed }) => [styles.row, pressed && { backgroundColor: c.field }]}
+      style={({ pressed }) => [styles.row, pressed && { backgroundColor: c.surface }]}
     >
       <View style={[styles.check, { borderColor: c.accent }]} />
       <View style={styles.text}>
@@ -59,20 +56,40 @@ function Row({ row, onComplete, last }: { row: TodayRow; onComplete: (r: TodayRo
   )
 }
 
+/** The three count cards (design D2): Remaining, Overdue, Unplanned. */
+function CountCards({ rows }: { rows: TodayRow[] }) {
+  const c = palette[useColorScheme() === 'dark' ? 'dark' : 'light']
+  const k = counts(rows.map((r) => ({ task: r.task })), today())
+  const card = (label: string, n: number) => (
+    <View key={label} style={[styles.card, { backgroundColor: c.surface }]}>
+      <Text style={[styles.cardCount, { color: c.text }]}>{n}</Text>
+      <Text style={[styles.cardLabel, { color: c.textSecondary }]}>{label}</Text>
+    </View>
+  )
+  return (
+    <View style={styles.cards}>
+      {card('Remaining', k.remaining)}
+      {card('Overdue', k.overdue)}
+      {card('Unplanned', k.unplanned)}
+    </View>
+  )
+}
+
 export default function TodayScreen({ onSignOut }: { onSignOut: () => void }) {
   const c = palette[useColorScheme() === 'dark' ? 'dark' : 'light']
   const { rows, loaded, complete } = useTodayRows()
 
   return (
-    <View style={[styles.screen, { backgroundColor: c.bg }]}>
+    <View style={[styles.screen, { backgroundColor: c.background }]}>
       <View style={styles.header}>
         <Text accessibilityRole="header" style={[styles.title, { color: c.text }]}>Today</Text>
         <Pressable accessibilityRole="button" onPress={onSignOut} hitSlop={12}>
-          <Text style={[styles.signOut, { color: c.muted }]}>Sign out</Text>
+          <Text style={[styles.signOut, { color: c.textSecondary }]}>Sign out</Text>
         </Pressable>
       </View>
+      {loaded && <CountCards rows={rows} />}
       {loaded && rows.length === 0 ? (
-        <Text style={[styles.empty, { color: c.muted }]}>Nothing due today.</Text>
+        <Text style={[styles.empty, { color: c.textSecondary }]}>Nothing due today.</Text>
       ) : (
         <LegendList
           data={rows}
@@ -91,6 +108,10 @@ const styles = StyleSheet.create({
   header: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 24, paddingTop: 24, paddingBottom: 8 },
   title: { fontSize: 34, fontWeight: '700' },
   signOut: { fontSize: 15 },
+  cards: { flexDirection: 'row', gap: 8, paddingHorizontal: 24, paddingBottom: 8 },
+  card: { borderRadius: 12, flex: 1, paddingHorizontal: 12, paddingVertical: 8 },
+  cardCount: { fontSize: 22, fontWeight: '700' },
+  cardLabel: { fontSize: 11 },
   row: { alignItems: 'center', flexDirection: 'row', gap: 12, minHeight: 48, paddingHorizontal: 24 },
   check: { borderRadius: 12, borderWidth: 2, height: 24, width: 24 },
   text: { flex: 1 },
