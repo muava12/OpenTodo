@@ -1,4 +1,4 @@
-name: Test 1 — push with paths
+name: Test 2 — concurrency
 
 "on":
   push:
@@ -9,6 +9,10 @@ name: Test 1 — push with paths
 
 permissions:
   contents: read
+
+concurrency:
+  group: app-apk-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
