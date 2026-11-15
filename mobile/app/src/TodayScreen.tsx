@@ -9,8 +9,9 @@ import { todayRows, type TodayRow } from './today'
 import { counts } from './counts'
 import { palette } from './ui/tokens'
 import { statusLine } from './syncStatus'
+import { bottomPadding } from './padding'
 import { requestSync, useSyncStatus } from '@shared/sync'
-import { RefreshControl } from 'react-native'
+import { RefreshControl, Keyboard } from 'react-native'
 
 /** The grace period of a completion, in ms (design D3). */
 const GRACE_MS = 5_000
@@ -104,6 +105,13 @@ export default function TodayScreen({ onSignOut }: { onSignOut: () => void }) {
   const { rows, loaded, complete, undo, undoComplete, reload } = useTodayRows()
   const sync = useSyncStatus()
   const [refreshing, setRefreshing] = useState(false)
+  const [keyboardUp, setKeyboardUp] = useState(false)
+
+  useEffect(() => {
+    const show = Keyboard.addListener('keyboardDidShow', () => setKeyboardUp(true))
+    const hide = Keyboard.addListener('keyboardDidHide', () => setKeyboardUp(false))
+    return () => { show.remove(); hide.remove() }
+  }, [])
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true)
@@ -133,6 +141,7 @@ export default function TodayScreen({ onSignOut }: { onSignOut: () => void }) {
           renderItem={({ item, index }) => <Row row={item} onComplete={complete} last={index === rows.length - 1} />}
           recycleItems
           estimatedItemSize={48}
+          contentContainerStyle={{ paddingBottom: bottomPadding({ keyboard: keyboardUp, barHeight: 0 }) }}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void onRefresh()} />}
         />
       )}
