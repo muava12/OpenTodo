@@ -11,7 +11,7 @@ import type { ExpoConfig } from 'expo/config'
 const config: ExpoConfig = {
   name: 'OpenTodo',
   slug: 'opentodo',
-  version: '2.0.1',
+  version: '2.0.2',
   scheme: 'opentodo',
   orientation: 'portrait',
   // metro.config.js resolves @shared/* itself (with the shared modules' packages).
