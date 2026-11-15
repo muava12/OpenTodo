@@ -8,7 +8,8 @@
     "isolatedModules": true,
     "types": ["jest", "node"],
     "paths": {
-      "@shared/*": ["../../web/src/lib/*"]
+      "@shared/*": ["../../web/src/lib/*"],
+      "@legendapp/list": ["./node_modules/@legendapp/list/react-native.d.ts"]
     }
   },
   "include": ["index.ts", "app.config.ts", "src", "test", "perf"]

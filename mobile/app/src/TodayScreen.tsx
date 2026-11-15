@@ -3,7 +3,8 @@
 // a haptic, as the trial the foundation promised. The rows come from the shared
 // todayTasks (src/today.ts); this screen draws them and reloads on a change.
 import { useCallback, useEffect, useState } from 'react'
-import { FlatList, Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native'
+import { LegendList } from '@legendapp/list'
+import { Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native'
 import { todayRows, type TodayRow } from './today'
 
 const palette = {
@@ -73,10 +74,12 @@ export default function TodayScreen({ onSignOut }: { onSignOut: () => void }) {
       {loaded && rows.length === 0 ? (
         <Text style={[styles.empty, { color: c.muted }]}>Nothing due today.</Text>
       ) : (
-        <FlatList
+        <LegendList
           data={rows}
           keyExtractor={(r) => r.task.id}
           renderItem={({ item, index }) => <Row row={item} onComplete={complete} last={index === rows.length - 1} />}
+          recycleItems
+          estimatedItemSize={48}
         />
       )}
     </View>

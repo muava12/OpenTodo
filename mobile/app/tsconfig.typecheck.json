@@ -9,7 +9,8 @@
       "react/*": ["./node_modules/@types/react/*"],
       "dexie": ["./node_modules/dexie"],
       "dexie-react-hooks": ["./types/dexie-react-hooks.d.ts"],
-      "yjs": ["./node_modules/yjs"]
+      "yjs": ["./node_modules/yjs"],
+      "@legendapp/list": ["./node_modules/@legendapp/list/react-native.d.ts"]
     }
   }
 }

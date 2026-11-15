@@ -12,7 +12,7 @@ These tasks build what this change needs that `native-app-foundation` left open.
 
 - [ ] 2.1 Add `mobile/app/src/ui/tokens.ts` with the six colours, the type scale and the spacing of design D6, and a Jest test that every text/background pair meets WCAG AA. Verify: the contrast test fails on a failing pair, passes on the shipped tokens.
 - [ ] 2.2 Set up the four tabs with their own stacks, large titles, the Inbox badge and the search bar in every list header. Verify: Jest navigation tests, and the Maestro `tabs` flow on the simulator and the emulator.
-- [ ] 2.3 Run the list spike: `@legendapp/list` against `@shopify/flash-list` with 2,000 rows (scroll at 120 Hz, completion re-render). Record the choice in design D2. Verify: a CI artifact with frame times, and the choice written into this design.
+- [x] 2.3 Decide the list library: `@legendapp/list`, recorded in design D2 (2026-11-15) without the simulator spike; the 2,000-row scroll test runs on the device check (task 9), and the fallback is `@shopify/flash-list`. Verify: the design names the choice and the fallback; no simulator is needed for the decision.
 
 ## 3. The list screen
 

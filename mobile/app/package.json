@@ -12,6 +12,7 @@
     "shared-modules": "node scripts/shared-modules.mjs"
   },
   "dependencies": {
+    "@legendapp/list": "3.7.1",
     "@op-engineering/op-sqlite": "19.0.1",
     "@react-native-community/netinfo": "12.0.1",
     "@react-navigation/native": "7.5.1",

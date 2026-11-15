@@ -25,6 +25,7 @@ Every package in `package.json`, with the reason it is there (OpenSpec change `n
 - `@react-navigation/native-stack`: the native stack (UINavigationController / Fragment), edge-swipe back, large titles.
 - `react-native-bottom-tabs`: the platform's tab bar (UITabBarController / Material bottom navigation).
 - `react-native-gesture-handler`: the swipe actions and the drag the lists use.
+- `@legendapp/list`: the recycled list of the list screen (design D2); 3.7.1, the newest release before the npm mirror's cut-off. Recycles views on the New Architecture, and its row props fit the thread-and-checkbox shape.
 - `react-native-reanimated`: the animations on the UI thread (the tab transitions, the completion).
 - `dexie`: the local database's schema, which `web/src/lib/db.ts` declares on a Dexie instance, and the zones the adapter's transactions use (`src/storage/scope.ts`). Dexie never opens a database in the app; the adapter does.
 

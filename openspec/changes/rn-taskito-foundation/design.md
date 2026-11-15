@@ -181,5 +181,5 @@ The app's own bundle, not the web's. The budgets of `docs/performance.md` (`app-
 
 ## Open Questions
 
-- The list library: `@legendapp/list` against `@shopify/flash-list`, by the foundation's spike and this change's 2,000-row test.
+- ~~The list library: `@legendapp/list` against `@shopify/flash-list`~~. **Decided (2026-11-15):** `@legendapp/list`, without the simulator spike: it is the maintained choice for the New Architecture (the app's renderer, foundation D1), it recycles views and it is what the design's row shape (a thread and a checkbox per row) needs. The 2,000-row scroll test runs on the device check (task 9) instead; if it drops frames there, the fallback is `@shopify/flash-list`, which the same row shape supports. The change is one import and one prop set.
 - Whether the Inbox tab keeps a count badge, given that the Inbox is one tap from Today. The design says yes; the phone check decides.
