@@ -14,7 +14,7 @@ data class WidgetModel(
     data class Row(val id: String, val title: String?, val time: String?, val priority: Int, val overdue: Boolean)
 
     companion object {
-        const val ROWS = 5
+        const val ROWS = 50
 
         /** Null when nothing was published yet (or the publication is unreadable). Locked: counts, no titles. */
         fun parse(json: String?): WidgetModel? {

@@ -93,4 +93,8 @@ object ReminderSchedule {
 
     /** The address the quick-add widget opens (the web app's `?add=`; shared fixture bridge/actions.json). */
     const val QUICK_ADD_PATH = "/?add="
+
+    /** The address a widget row's checkbox opens in the background (the web app's completion path). */
+    fun widgetTaskPath(taskId: String): String =
+        "/?task=" + java.net.URLEncoder.encode(taskId, "UTF-8") + "&action=done"
 }
