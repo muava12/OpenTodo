@@ -8,7 +8,7 @@ name: App APK build
 #   gh workflow run app-apk.yml --ref v1.0.0              # release (signed)
 on:
   push:
-    branches: [main]
+    branches: [main, 'feat/**']
     paths:
       - 'mobile/app/**'
       - 'mobile/android/**'
