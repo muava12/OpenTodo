@@ -38,3 +38,8 @@ jobs:
         java-version: 21
     - run: npm ci --no-audit --no-fund
       working-directory: mobile/app
+    - name: Prebuild (android/ from app.config.ts)
+      working-directory: mobile/app
+      env:
+        CI: '1'
+      run: npx expo prebuild --platform android --no-install
