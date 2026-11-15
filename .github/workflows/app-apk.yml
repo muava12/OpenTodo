@@ -1,0 +1,72 @@
+name: App APK build
+
+# Build the native app's APK on the self-hosted runner (box-04). Debug on
+# every push that changes the app; release (signed) on a tag or by hand,
+# when the signing keystore is installed on the runner.
+#
+#   gh workflow run app-apk.yml --ref <branch>            # debug
+#   gh workflow run app-apk.yml --ref v1.0.0              # release (signed)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'mobile/app/**'
+      - 'mobile/android/**'
+      - 'scripts/build-apk.sh'
+      - '.github/workflows/app-apk.yml'
+  workflow_dispatch:
+    inputs:
+      release:
+        description: Build a signed release APK (needs the keystore on the runner)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: app-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: [self-hosted, box-04]
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: mobile/app/package-lock.json
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: 21.0.13+9
+      - uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
+      - uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
+      - run: npm ci --no-audit --no-fund
+        working-directory: mobile/app
+      - name: Prebuild (android/ from app.config.ts)
+        working-directory: mobile/app
+        env:
+          CI: "1"
+        run: npx expo prebuild --platform android --no-install
+      - name: Debug APK
+        run: scripts/build-apk.sh
+      - name: Release APK (signed)
+        if: ${{ inputs.release || startsWith(github.ref, 'refs/tags/v') }}
+        env:
+          ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: scripts/build-apk.sh release
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: opentodo-apk
+          path: |
+            dist/opentodo-debug.apk
+            dist/opentodo-release.apk
+          if-no-files-found: error

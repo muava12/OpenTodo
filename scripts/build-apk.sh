@@ -28,8 +28,9 @@ if [ "$MODE" = release ]; then
   : "${ANDROID_KEY_ALIAS:?release needs ANDROID_KEY_ALIAS}"
   : "${ANDROID_KEY_PASSWORD:?release needs ANDROID_KEY_PASSWORD}"
 
-  # The signing config the Gradle build reads (key.properties, git-ignored).
-  cat > mobile/android/key.properties <<EOF
+  # The signing config the Gradle build reads (keystore.properties, git-ignored;
+  # build.gradle.kts reads storeFile/storePassword/keyAlias/keyPassword).
+  cat > mobile/android/keystore.properties <<EOF
 storeFile=$ANDROID_KEYSTORE
 storePassword=$ANDROID_KEYSTORE_PASSWORD
 keyAlias=$ANDROID_KEY_ALIAS
