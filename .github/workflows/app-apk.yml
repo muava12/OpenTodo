@@ -1,4 +1,4 @@
-name: Test 3 — setup actions
+name: Test 4 — secrets
 
 "on":
   push:
@@ -27,3 +27,5 @@ jobs:
           distribution: temurin
           java-version: 21
       - run: echo hello
+        env:
+          ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
