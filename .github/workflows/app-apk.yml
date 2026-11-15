@@ -51,4 +51,3 @@ jobs:
         ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
       run: 'echo "key length: ${#ANDROID_KEYSTORE}"'
       working-directory: .
-
