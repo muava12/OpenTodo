@@ -8,6 +8,9 @@ import { Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native'
 import { todayRows, type TodayRow } from './today'
 import { counts } from './counts'
 import { palette } from './ui/tokens'
+import { statusLine } from './syncStatus'
+import { requestSync, useSyncStatus } from '@shared/sync'
+import { RefreshControl } from 'react-native'
 
 /** The grace period of a completion, in ms (design D3). */
 const GRACE_MS = 5_000
@@ -55,7 +58,7 @@ export function useTodayRows() {
     await reload()
   }, [undo, reload])
 
-  return { rows, loaded, complete, undo, undoComplete }
+  return { rows, loaded, complete, undo, undoComplete, reload }
 }
 
 /** One row: a 24 px circle with a 44 px target, the title, and the thread's line. */
@@ -98,7 +101,18 @@ function CountCards({ rows }: { rows: TodayRow[] }) {
 
 export default function TodayScreen({ onSignOut }: { onSignOut: () => void }) {
   const c = palette[useColorScheme() === 'dark' ? 'dark' : 'light']
-  const { rows, loaded, complete, undo, undoComplete } = useTodayRows()
+  const { rows, loaded, complete, undo, undoComplete, reload } = useTodayRows()
+  const sync = useSyncStatus()
+  const [refreshing, setRefreshing] = useState(false)
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true)
+    requestSync(0)
+    await reload()
+    setRefreshing(false)
+  }, [reload])
+
+  const line = statusLine(sync)
 
   return (
     <View style={[styles.screen, { backgroundColor: c.background }]}>
@@ -109,6 +123,7 @@ export default function TodayScreen({ onSignOut }: { onSignOut: () => void }) {
         </Pressable>
       </View>
       {loaded && <CountCards rows={rows} />}
+      {line ? <Text style={[styles.status, { color: c.textSecondary }]}>{line}</Text> : null}
       {loaded && rows.length === 0 ? (
         <Text style={[styles.empty, { color: c.textSecondary }]}>Nothing due today.</Text>
       ) : (
@@ -118,6 +133,7 @@ export default function TodayScreen({ onSignOut }: { onSignOut: () => void }) {
           renderItem={({ item, index }) => <Row row={item} onComplete={complete} last={index === rows.length - 1} />}
           recycleItems
           estimatedItemSize={48}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void onRefresh()} />}
         />
       )}
       {undo && (
@@ -143,6 +159,7 @@ const styles = StyleSheet.create({
   text: { flex: 1 },
   thread: { bottom: 0, left: 35, position: 'absolute', top: 40, width: 2 },
   empty: { fontSize: 15, paddingHorizontal: 24, paddingTop: 16 },
+  status: { fontSize: 13, paddingHorizontal: 24, paddingBottom: 4 },
   undo: { borderRadius: 12, bottom: 24, marginHorizontal: 24, paddingHorizontal: 16, paddingVertical: 12, position: 'absolute' },
   undoText: { fontSize: 15, fontWeight: '600' },
 })
