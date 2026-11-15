@@ -43,3 +43,6 @@ jobs:
       env:
         CI: '1'
       run: npx expo prebuild --platform android --no-install
+    - name: Debug APK (the runner's own SDK, no setup-android)
+      working-directory: mobile/app/android
+      run: ./gradlew --no-daemon :app:assembleDebug
