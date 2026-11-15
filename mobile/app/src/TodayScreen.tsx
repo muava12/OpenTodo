@@ -9,6 +9,9 @@ import { todayRows, type TodayRow } from './today'
 import { counts } from './counts'
 import { palette } from './ui/tokens'
 
+/** The grace period of a completion, in ms (design D3). */
+const GRACE_MS = 5_000
+
 /** Today's date on the device, as the shared modules write it. */
 function today(): string {
   const d = new Date()
@@ -20,6 +23,7 @@ function today(): string {
 export function useTodayRows() {
   const [rows, setRows] = useState<TodayRow[]>([])
   const [loaded, setLoaded] = useState(false)
+  const [undo, setUndo] = useState<null | { row: TodayRow; until: number }>(null)
 
   const reload = useCallback(async () => {
     const next = await todayRows(today())
@@ -29,12 +33,29 @@ export function useTodayRows() {
 
   useEffect(() => { void reload() }, [reload])
 
+  // The grace period: the row stays for 5 s with Undo, then folds away.
+  useEffect(() => {
+    if (!undo) return
+    const ms = undo.until - Date.now()
+    if (ms <= 0) { setUndo(null); void reload(); return }
+    const t = setTimeout(() => { setUndo(null); void reload() }, ms)
+    return () => clearTimeout(t)
+  }, [undo, reload])
+
   const complete = useCallback(async (row: TodayRow) => {
     await row.complete()
-    await reload()
-  }, [reload])
+    setRows((rs) => rs.filter((r) => r.task.id !== row.task.id))
+    setUndo({ row, until: Date.now() + GRACE_MS })
+  }, [])
 
-  return { rows, loaded, complete }
+  const undoComplete = useCallback(async () => {
+    if (!undo) return
+    await undo.row.reopen()
+    setUndo(null)
+    await reload()
+  }, [undo, reload])
+
+  return { rows, loaded, complete, undo, undoComplete }
 }
 
 /** One row: a 24 px circle with a 44 px target, the title, and the thread's line. */
@@ -77,7 +98,7 @@ function CountCards({ rows }: { rows: TodayRow[] }) {
 
 export default function TodayScreen({ onSignOut }: { onSignOut: () => void }) {
   const c = palette[useColorScheme() === 'dark' ? 'dark' : 'light']
-  const { rows, loaded, complete } = useTodayRows()
+  const { rows, loaded, complete, undo, undoComplete } = useTodayRows()
 
   return (
     <View style={[styles.screen, { backgroundColor: c.background }]}>
@@ -99,6 +120,11 @@ export default function TodayScreen({ onSignOut }: { onSignOut: () => void }) {
           estimatedItemSize={48}
         />
       )}
+      {undo && (
+        <Pressable accessibilityRole="button" onPress={() => void undoComplete()} style={[styles.undo, { backgroundColor: c.surface }]}>
+          <Text style={[styles.undoText, { color: c.text }]}>Undo</Text>
+        </Pressable>
+      )}
     </View>
   )
 }
@@ -117,4 +143,6 @@ const styles = StyleSheet.create({
   text: { flex: 1 },
   thread: { bottom: 0, left: 35, position: 'absolute', top: 40, width: 2 },
   empty: { fontSize: 15, paddingHorizontal: 24, paddingTop: 16 },
+  undo: { borderRadius: 12, bottom: 24, marginHorizontal: 24, paddingHorizontal: 16, paddingVertical: 12, position: 'absolute' },
+  undoText: { fontSize: 15, fontWeight: '600' },
 })

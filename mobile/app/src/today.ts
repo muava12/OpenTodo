@@ -13,6 +13,8 @@ export interface TodayRow {
   task: Task
   /** Completing this row completes the task and taps, unless the preference is off. */
   complete: () => Promise<void>
+  /** Undo of a completion: the task is open again. */
+  reopen: () => Promise<void>
 }
 
 /** Today's rows in Today's order (the shared todayList). */
@@ -23,6 +25,9 @@ export async function todayRows(today: string, prefs?: Partial<UserPrefs> | null
     complete: async () => {
       await setTaskCompleted(task.id, true)
       await tapComplete(prefs ?? null)
+    },
+    reopen: async () => {
+      await setTaskCompleted(task.id, false)
     },
   }))
 }
