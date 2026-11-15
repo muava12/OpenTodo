@@ -36,3 +36,5 @@ jobs:
       with:
         distribution: temurin
         java-version: 21
+    - run: npm ci --no-audit --no-fund
+      working-directory: mobile/app
