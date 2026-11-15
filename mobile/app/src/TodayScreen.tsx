@@ -12,6 +12,7 @@ import { statusLine } from './syncStatus'
 import { bottomPadding } from './padding'
 import { parseLine, chipsOf } from './parseLine'
 import { taskFrom } from './taskFrom'
+import TaskScreen from './TaskScreen'
 import { createTask } from '@shared/ops'
 import { requestSync, useSyncStatus } from '@shared/sync'
 
@@ -64,22 +65,27 @@ export function useTodayRows() {
   return { rows, loaded, complete, undo, undoComplete, reload }
 }
 
-/** One row: a 24 px circle with a 44 px target, the title, and the thread's line. */
-function Row({ row, onComplete, last }: { row: TodayRow; onComplete: (r: TodayRow) => void; last: boolean }) {
+/** One row: a 24 px circle with a 44 px target, the title, the thread's line, and the open. */
+function Row({ row, onComplete, last, onOpen }: { row: TodayRow; onComplete: (r: TodayRow) => void; last: boolean; onOpen: (r: TodayRow) => void }) {
   const c = palette[useColorScheme() === 'dark' ? 'dark' : 'light']
   return (
-    <Pressable
-      accessibilityRole="checkbox"
-      accessibilityState={{ checked: false }}
-      onPress={() => onComplete(row)}
-      style={({ pressed }) => [styles.row, pressed && { backgroundColor: c.surface }]}
-    >
-      <View style={[styles.check, { borderColor: c.accent }]} />
-      <View style={styles.text}>
-        <Text style={[styles.title, { color: c.text }]}>{row.task.title}</Text>
-      </View>
-      {!last && <View style={[styles.thread, { backgroundColor: c.accent }]} />}
-    </Pressable>
+    <View style={[styles.rowWrap, { backgroundColor: c.background }]}>
+      <Pressable
+        accessibilityRole="checkbox"
+        accessibilityState={{ checked: false }}
+        onPress={() => onComplete(row)}
+        style={({ pressed }) => [styles.row, pressed && { backgroundColor: c.surface }]}
+      >
+        <View style={[styles.check, { borderColor: c.accent }]} />
+        <View style={styles.text}>
+          <Text style={[styles.title, { color: c.text }]}>{row.task.title}</Text>
+        </View>
+        {!last && <View style={[styles.thread, { backgroundColor: c.accent }]} />}
+      </Pressable>
+      <Pressable accessibilityRole="button" onPress={() => onOpen(row)} hitSlop={8} style={styles.open}>
+        <Text style={[styles.openText, { color: c.textSecondary }]}>Open</Text>
+      </Pressable>
+    </View>
   )
 }
 
@@ -108,6 +114,7 @@ export default function TodayScreen({ onSignOut }: { onSignOut: () => void }) {
   const sync = useSyncStatus()
   const [refreshing, setRefreshing] = useState(false)
   const [keyboardUp, setKeyboardUp] = useState(false)
+  const [open, setOpen] = useState<TodayRow | null>(null)
 
   useEffect(() => {
     const show = Keyboard.addListener('keyboardDidShow', () => setKeyboardUp(true))
@@ -135,6 +142,8 @@ export default function TodayScreen({ onSignOut }: { onSignOut: () => void }) {
     await reload()
   }, [text, reload])
 
+  if (open) return <TaskScreen task={open.task} onBack={() => setOpen(null)} />
+
   return (
     <View style={[styles.screen, { backgroundColor: c.background }]}>
       <View style={styles.header}>
@@ -151,7 +160,7 @@ export default function TodayScreen({ onSignOut }: { onSignOut: () => void }) {
         <LegendList
           data={rows}
           keyExtractor={(r) => r.task.id}
-          renderItem={({ item, index }) => <Row row={item} onComplete={complete} last={index === rows.length - 1} />}
+          renderItem={({ item, index }) => <Row row={item} onComplete={complete} last={index === rows.length - 1} onOpen={setOpen} />}
           recycleItems
           estimatedItemSize={48}
           contentContainerStyle={{ paddingBottom: bottomPadding({ keyboard: keyboardUp, barHeight: 0 }) }}
@@ -202,7 +211,10 @@ const styles = StyleSheet.create({
   card: { borderRadius: 12, flex: 1, paddingHorizontal: 12, paddingVertical: 8 },
   cardCount: { fontSize: 22, fontWeight: '700' },
   cardLabel: { fontSize: 11 },
-  row: { alignItems: 'center', flexDirection: 'row', gap: 12, minHeight: 48, paddingHorizontal: 24 },
+  row: { alignItems: 'center', flex: 1, flexDirection: 'row', gap: 12, minHeight: 48, paddingHorizontal: 24 },
+  rowWrap: { flexDirection: 'row', minHeight: 48 },
+  open: { justifyContent: 'center', paddingHorizontal: 16 },
+  openText: { fontSize: 13, fontWeight: '600' },
   check: { borderRadius: 12, borderWidth: 2, height: 24, width: 24 },
   text: { flex: 1 },
   thread: { bottom: 0, left: 35, position: 'absolute', top: 40, width: 2 },
