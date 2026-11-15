@@ -63,7 +63,7 @@ class TodayWidget : AppWidgetProvider() {
             for ((i, rowId) in ROW_IDS.withIndex()) {
                 val row = model?.rows?.getOrNull(i)
                 if (row == null) { v.setViewVisibility(rowId, View.GONE); continue }
-                const val title = row.title ?: context.getString(R.string.widget_untitled)
+                val title = row.title ?: context.getString(R.string.widget_untitled)
                 v.setTextViewText(rowId, if (row.time != null) "${row.time}  $title" else title)
                 // A plain row keeps its layout colour (WidgetRow: the day/night widget_text) so the
                 // launcher resolves it for the current theme; context.getColor here would bake in
