@@ -17,6 +17,7 @@
     "dexie": "4.4.7",
     "expo": "58.0.19",
     "expo-crypto": "58.0.7",
+    "expo-haptics": "58.0.2",
     "expo-linking": "58.0.15",
     "expo-localization": "58.0.5",
     "expo-secure-store": "58.0.2",

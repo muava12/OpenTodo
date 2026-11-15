@@ -8,6 +8,7 @@ import { checkServer, UPDATE_GUIDE, type ServerCheck } from './server'
 import { signIn } from './nativeAuth'
 import { tokens } from './nativeAuth'
 import { startAccount, stopAccount } from './account'
+import TodayScreen from './TodayScreen'
 import type { Tokens } from './signIn'
 
 const palette = {
@@ -62,18 +63,7 @@ export default function App() {
     setResult(null)
   }, [])
 
-  if (account) {
-    return (
-      <View style={[styles.screen, styles.body, { backgroundColor: c.bg }]}>
-        <Text accessibilityRole="header" style={[styles.title, { color: c.text }]}>Signed in</Text>
-        <Text style={[styles.note, { color: c.muted }]}>{account.server}</Text>
-        {account.version ? <Text style={[styles.note, { color: c.muted }]}>OpenTodo {account.version}</Text> : null}
-        <Pressable accessibilityRole="button" onPress={signOut} style={({ pressed }) => [styles.button, { backgroundColor: c.accent, opacity: pressed ? 0.6 : 1 }]}>
-          <Text style={styles.buttonText}>Sign out</Text>
-        </Pressable>
-      </View>
-    )
-  }
+  if (account) return <TodayScreen onSignOut={() => void signOut()} />
 
   return (
     <KeyboardAvoidingView behavior="padding" style={[styles.screen, { backgroundColor: c.bg }]}>
