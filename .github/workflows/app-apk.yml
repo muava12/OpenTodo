@@ -1,4 +1,4 @@
-name: Test 4 — secrets
+name: Test 5 — base64 secret
 
 "on":
   push:
