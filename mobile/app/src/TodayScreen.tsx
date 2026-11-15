@@ -4,14 +4,16 @@
 // todayTasks (src/today.ts); this screen draws them and reloads on a change.
 import { useCallback, useEffect, useState } from 'react'
 import { LegendList } from '@legendapp/list'
-import { Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native'
+import { Pressable, RefreshControl, Keyboard, StyleSheet, Text, TextInput, useColorScheme, View } from 'react-native'
 import { todayRows, type TodayRow } from './today'
 import { counts } from './counts'
 import { palette } from './ui/tokens'
 import { statusLine } from './syncStatus'
 import { bottomPadding } from './padding'
+import { parseLine, chipsOf } from './parseLine'
+import { taskFrom } from './taskFrom'
+import { createTask } from '@shared/ops'
 import { requestSync, useSyncStatus } from '@shared/sync'
-import { RefreshControl, Keyboard } from 'react-native'
 
 /** The grace period of a completion, in ms (design D3). */
 const GRACE_MS = 5_000
@@ -121,6 +123,17 @@ export default function TodayScreen({ onSignOut }: { onSignOut: () => void }) {
   }, [reload])
 
   const line = statusLine(sync)
+  const [text, setText] = useState('')
+  const chips = text ? chipsOf(parseLine(text, { today: today(), projects: [] })) : []
+
+  const submit = useCallback(async () => {
+    const line = text.trim()
+    if (!line) return
+    const parsed = parseLine(line, { today: today(), projects: [] })
+    await createTask(taskFrom(parsed, { today: today() }))
+    setText('')
+    await reload()
+  }, [text, reload])
 
   return (
     <View style={[styles.screen, { backgroundColor: c.background }]}>
@@ -150,6 +163,32 @@ export default function TodayScreen({ onSignOut }: { onSignOut: () => void }) {
           <Text style={[styles.undoText, { color: c.text }]}>Undo</Text>
         </Pressable>
       )}
+      <View style={[styles.bar, { backgroundColor: c.surface }]}>
+        {chips.length > 0 && (
+          <View style={styles.chips}>
+            {chips.map((chip) => (
+              <View key={chip.kind} style={[styles.chip, { backgroundColor: c.background }]}>
+                <Text style={[styles.chipText, { color: c.textSecondary }]}>{chip.label}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+        <View style={styles.barRow}>
+          <TextInput
+            accessibilityLabel="Add a task"
+            onChangeText={setText}
+            onSubmitEditing={() => void submit()}
+            placeholder="Add a task…"
+            placeholderTextColor={c.textSecondary}
+            returnKeyType="done"
+            style={[styles.barInput, { color: c.text }]}
+            value={text}
+          />
+          <Pressable accessibilityRole="button" onPress={() => void submit()} hitSlop={12}>
+            <Text style={[styles.barAdd, { color: c.accent }]}>Add</Text>
+          </Pressable>
+        </View>
+      </View>
     </View>
   )
 }
@@ -169,6 +208,13 @@ const styles = StyleSheet.create({
   thread: { bottom: 0, left: 35, position: 'absolute', top: 40, width: 2 },
   empty: { fontSize: 15, paddingHorizontal: 24, paddingTop: 16 },
   status: { fontSize: 13, paddingHorizontal: 24, paddingBottom: 4 },
+  bar: { gap: 4, paddingHorizontal: 16, paddingTop: 8, paddingBottom: 8 },
+  barRow: { alignItems: 'center', flexDirection: 'row', gap: 8 },
+  barInput: { flex: 1, fontSize: 16, paddingVertical: 12 },
+  barAdd: { fontSize: 16, fontWeight: '600' },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 4 },
+  chip: { borderRadius: 8, paddingHorizontal: 8, paddingVertical: 4 },
+  chipText: { fontSize: 12 },
   undo: { borderRadius: 12, bottom: 24, marginHorizontal: 24, paddingHorizontal: 16, paddingVertical: 12, position: 'absolute' },
   undoText: { fontSize: 15, fontWeight: '600' },
 })

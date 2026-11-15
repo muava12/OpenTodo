@@ -2,7 +2,7 @@
 // the context rule — a task added from Today gets today, one from a project goes
 // there, one from a label carries it — as the web's own create path. The rule is
 // pure; the write is ops'.
-import type { Due } from '@shared/types'
+import type { Due, Priority } from '@shared/types'
 
 /** Where the bar was opened. */
 export interface BarContext {
@@ -18,12 +18,12 @@ export interface BarContext {
 export function taskFrom(
   parsed: { title: string; due: Due | null; projectId: string | null; labels: string[]; priority: number | null },
   ctx: BarContext,
-): { title: string; due: Due | null; project_id: string | null; labels: string[]; priority: number } {
+): { title: string; due: Due | null; project_id: string | null; labels: string[]; priority: Priority } {
   return {
     title: parsed.title,
     due: parsed.due ?? (ctx.today ? { date: ctx.today } : null),
     project_id: parsed.projectId ?? ctx.projectId ?? null,
     labels: [...new Set([...parsed.labels, ...(ctx.label ? [ctx.label] : [])])],
-    priority: parsed.priority ?? 4,
+    priority: (parsed.priority ?? 4) as Priority,
   }
 }
