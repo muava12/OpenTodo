@@ -48,6 +48,6 @@ jobs:
       run: ./gradlew --no-daemon :app:assembleDebug
     - name: Release APK (signed)
       env:
-        FOO: bar
-      run: echo "key=${{ secrets.ANDROID_KEYSTORE }}" | head -c 20
+        ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+      run: 'echo "key length: ${#ANDROID_KEYSTORE}"'
       working-directory: .
