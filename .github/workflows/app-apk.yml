@@ -1,53 +1,17 @@
-name: App APK build
-'on':
+name: Test 1 — push with paths
+
+"on":
   push:
-    branches:
-    - main
-    - feat/**
+    branches: [main]
     paths:
-    - mobile/app/**
-    - mobile/android/**
-    - scripts/build-apk.sh
-    - .github/workflows/app-apk.yml
+      - '.github/workflows/app-apk.yml'
   workflow_dispatch:
-    inputs:
-      release:
-        description: Build a signed release APK (needs the keystore on the runner)
-        type: boolean
-        default: false
+
 permissions:
   contents: read
-concurrency:
-  group: app-apk-${{ github.ref }}
-  cancel-in-progress: true
+
 jobs:
   build:
-    name: Build APK
     runs-on: ubuntu-latest
-    timeout-minutes: 40
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 24
-        cache: npm
-        cache-dependency-path: mobile/app/package-lock.json
-    - uses: actions/setup-java@v4
-      with:
-        distribution: temurin
-        java-version: 21
-    - run: npm ci --no-audit --no-fund
-      working-directory: mobile/app
-    - name: Prebuild (android/ from app.config.ts)
-      working-directory: mobile/app
-      env:
-        CI: '1'
-      run: npx expo prebuild --platform android --no-install
-    - name: Debug APK (the runner's own SDK, no setup-android)
-      working-directory: mobile/app/android
-      run: ./gradlew --no-daemon :app:assembleDebug
-    - name: Release APK (signed)
-      env:
-        ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
-      run: 'echo "key length: ${#ANDROID_KEYSTORE}"'
-      working-directory: .
+      - run: echo hello
