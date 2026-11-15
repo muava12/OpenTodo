@@ -83,10 +83,16 @@ object Scheduler {
 /** Shows the notifications: the reminder itself and the settings test. */
 object Notifier {
     const val CHANNEL = "reminders"
+    const val CHANNEL_DAILY = "daily"
+    const val CHANNEL_PINNED = "pinned"
+    const val CHANNEL_CAPTURE = "capture"
 
     private fun channel(context: Context) {
         val nm = context.getSystemService(NotificationManager::class.java)
         nm.createNotificationChannel(NotificationChannel(CHANNEL, context.getString(R.string.channel_reminders), NotificationManager.IMPORTANCE_HIGH))
+        nm.createNotificationChannel(NotificationChannel(CHANNEL_DAILY, context.getString(R.string.channel_daily), NotificationManager.IMPORTANCE_DEFAULT))
+        nm.createNotificationChannel(NotificationChannel(CHANNEL_PINNED, context.getString(R.string.channel_pinned), NotificationManager.IMPORTANCE_LOW))
+        nm.createNotificationChannel(NotificationChannel(CHANNEL_CAPTURE, context.getString(R.string.channel_capture), NotificationManager.IMPORTANCE_HIGH))
     }
 
     private fun open(context: Context, path: String, code: Int): PendingIntent {
