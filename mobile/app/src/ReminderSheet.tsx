@@ -54,7 +54,6 @@ export function ReminderSheet({ task, reminders = [], onAdd, onDelete, onClose }
 
   const saveRelative = (minutes: number) => {
     onAdd({ kind: 'relative', offset_minutes: minutes })
-    onClose()
   }
 
   const saveCustom = () => {
@@ -68,12 +67,10 @@ export function ReminderSheet({ task, reminders = [], onAdd, onDelete, onClose }
     const at = new Date(`${date}T${time}`).getTime()
     if (isNaN(at)) return
     onAdd({ kind: 'absolute', fire_at: at })
-    onClose()
   }
 
   const saveDeadline = (minutes: number) => {
     onAdd({ kind: 'deadline', offset_minutes: minutes })
-    onClose()
   }
 
   return (
