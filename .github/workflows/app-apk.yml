@@ -47,7 +47,7 @@ jobs:
       working-directory: mobile/app/android
       run: ./gradlew --no-daemon :app:assembleDebug
     - name: Release APK (signed)
-      if: ${{ inputs.release || startsWith(github.ref, 'refs/tags/v') }}
+      if: inputs.release == true
       working-directory: mobile/app/android
       env:
         ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
