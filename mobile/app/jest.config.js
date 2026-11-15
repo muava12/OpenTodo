@@ -11,6 +11,8 @@ module.exports = {
     '^dexie-react-hooks$': '<rootDir>/src/stubs/dexie-react-hooks.ts',
   },
   resolver: '<rootDir>/test/resolver.js',
+  // The fake IndexedDB before any module loads (the shared db.ts opens its Dexie at import).
+  setupFiles: ['<rootDir>/test/setup-idb.ts'],
   // Transform the shared library too (it lives outside this folder).
   transformIgnorePatterns: [
     'node_modules/(?!((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|react-native-.*|@react-native/.*))',

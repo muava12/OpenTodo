@@ -7,6 +7,7 @@ import { ActivityIndicator, KeyboardAvoidingView, Linking, Pressable, StyleSheet
 import { checkServer, UPDATE_GUIDE, type ServerCheck } from './server'
 import { signIn } from './nativeAuth'
 import { tokens } from './nativeAuth'
+import { startAccount, stopAccount } from './account'
 import type { Tokens } from './signIn'
 
 const palette = {
@@ -46,13 +47,16 @@ export default function App() {
     setResult(r)
     if (r.ok) {
       const s = await signIn({ server: r.url })
-      if (s.ok) setAccount({ server: r.url, version: r.version, tokens: s.tokens })
-      else setSignInProblem(s.problem)
+      if (s.ok) {
+        setAccount({ server: r.url, version: r.version, tokens: s.tokens })
+        await startAccount(r.url)
+      } else setSignInProblem(s.problem)
     }
     setBusy(false)
   }, [address, busy])
 
   const signOut = useCallback(async () => {
+    await stopAccount()
     await tokens.clear()
     setAccount(null)
     setResult(null)
