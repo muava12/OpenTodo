@@ -40,9 +40,11 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: mobile/app/package-lock.json
-      - name: Use system JDK 21 (skip setup-java download)
+      - name: Use system JDK 21 and Android SDK
         run: |
           echo "JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))" >> "$GITHUB_ENV"
+          echo "ANDROID_HOME=/opt/android-sdk" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=/opt/android-sdk" >> "$GITHUB_ENV"
           java -version
       - run: npm ci --no-audit --no-fund
         working-directory: mobile/app
