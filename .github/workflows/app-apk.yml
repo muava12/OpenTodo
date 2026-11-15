@@ -31,7 +31,7 @@ concurrency:
 jobs:
   build:
     name: Build APK
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64, box-04]
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
