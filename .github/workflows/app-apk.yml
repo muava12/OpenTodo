@@ -32,3 +32,9 @@ jobs:
         node-version: 24
         cache: npm
         cache-dependency-path: mobile/app/package-lock.json
+    - uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: 21
+    - uses: android-actions/setup-android@v3
+    - uses: gradle/actions/setup-gradle@v4
