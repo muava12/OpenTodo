@@ -48,6 +48,6 @@ jobs:
       run: ./gradlew --no-daemon :app:assembleDebug
     - name: Release APK (signed)
       env:
-        FOO: bar
+        ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
       run: scripts/build-apk.sh release
       working-directory: .
