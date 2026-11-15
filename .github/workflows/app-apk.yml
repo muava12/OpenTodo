@@ -69,11 +69,17 @@ jobs:
           fi
           echo "$ANDROID_KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/opentodo-release.jks"
           export ANDROID_KEYSTORE="$RUNNER_TEMP/opentodo-release.jks"
+          VERSION=$(grep -oP "version: '\K[^']+" mobile/app/app.config.ts 2>/dev/null || echo '0.0.0')
           scripts/build-apk.sh release
+          # Rename the APK to carry the version: opentodo-<version>.apk.
+          if [ -f dist/opentodo-release.apk ]; then
+            mv dist/opentodo-release.apk "dist/opentodo-$VERSION.apk"
+            echo "Built opentodo-$VERSION.apk"
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: opentodo-apk
           path: |
             mobile/app/android/app/build/outputs/apk/debug/app-debug.apk
-            dist/opentodo-release.apk
+            dist/opentodo-*.apk
           if-no-files-found: warn
