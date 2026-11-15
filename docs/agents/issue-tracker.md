@@ -1,3 +1,12 @@
+---
+title: Issue tracker
+summary: Where this repo's issues live and how the agent skills use them.
+audience: developer
+section: Reference
+specs: []
+screens: []
+order: 30
+---
 # Issue tracker: GitHub
 
 Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all operations. The repo is [OpenTodoApp/OpenTodo](https://github.com/OpenTodoApp/OpenTodo).

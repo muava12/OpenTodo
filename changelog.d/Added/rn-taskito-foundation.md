@@ -1,0 +1,3 @@
+Added
+
+- **The native React Native app** (`mobile/app/`, OpenSpec `rn-taskito-foundation`): four tabs (Today, Inbox, Upcoming, Browse), the shared selectors over the account's SQLite database, the Taskito palette with a WCAG AA gate, the quick-add bar with the shared parser, the task detail, the completion grace period with Undo, pull to sync, the four Android notification channels, and the widget rows that complete a task. The app signs in through the system browser with PKCE and syncs through the shared engine; no server code, no webapp code, no op schema change.

@@ -1,3 +1,12 @@
+---
+title: Domain docs
+summary: How the engineering skills read this repo's glossary and ADRs.
+audience: developer
+section: Reference
+specs: []
+screens: []
+order: 31
+---
 # Domain Docs
 
 How the engineering skills should consume this repo's domain documentation when exploring the codebase.
