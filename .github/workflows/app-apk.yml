@@ -6,7 +6,7 @@ name: App APK build
 #
 #   gh workflow run app-apk.yml --ref <branch>            # debug
 #   gh workflow run app-apk.yml --ref v1.0.0              # release (signed)
-"on":
+on:
   push:
     branches: [main, 'feat/**']
     paths:
