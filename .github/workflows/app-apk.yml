@@ -48,5 +48,5 @@ jobs:
       run: ./gradlew --no-daemon :app:assembleDebug
     - name: Release APK (signed)
       env:
-        ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+        FOO: bar
       run: echo release
