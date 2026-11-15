@@ -49,4 +49,5 @@ jobs:
     - name: Release APK (signed)
       env:
         FOO: bar
-      run: echo release
+      run: scripts/build-apk.sh release
+      working-directory: .
