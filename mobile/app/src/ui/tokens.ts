@@ -16,6 +16,18 @@ export interface Palette {
   high: Hex
   medium: Hex
   low: Hex
+  /** The glass pill of the bottom bar, resting. */
+  glass: string
+  /** The glass pill of the bottom bar, focused. */
+  glassFocus: string
+  /** The resting pill border. */
+  glassEdge: string
+  /** The focused pill border. */
+  glassEdgeFocus: string
+  /** The inverse (FAB) button fill. */
+  fabFill: Hex
+  /** The icon on the inverse (FAB) button. */
+  fabIcon: Hex
 }
 
 /** The type scale (design D6): the screen title, a row's title, a secondary line, a badge. */
@@ -37,6 +49,12 @@ export const palette: { light: Palette; dark: Palette } = {
     high: '#e53935',
     medium: '#b35c00',
     low: '#1e88e5',
+    glass: 'rgba(255,255,255,0.92)',
+    glassFocus: 'rgba(244,244,249,0.96)',
+    glassEdge: 'rgba(0,0,0,0.06)',
+    glassEdgeFocus: 'rgba(0,0,0,0.22)',
+    fabFill: '#343434',
+    fabIcon: '#ffffff',
   },
   dark: {
     accent: '#3c8dff',
@@ -48,6 +66,12 @@ export const palette: { light: Palette; dark: Palette } = {
     high: '#e53935',
     medium: '#fb8c00',
     low: '#1e88e5',
+    glass: 'rgba(28,31,36,0.92)',
+    glassFocus: 'rgba(38,42,50,0.96)',
+    glassEdge: 'rgba(255,255,255,0.06)',
+    glassEdgeFocus: 'rgba(255,255,255,0.22)',
+    fabFill: '#eaeaf0',
+    fabIcon: '#14161a',
   },
 }
 
