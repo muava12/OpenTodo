@@ -75,9 +75,17 @@ object ReminderSchedule {
 
     /**
      * A time reminder's notification buttons, in order (reminder-done-action): Done first, then
-     * Snooze 10 min and Dismiss, like the web push notification.
+     * Snooze 10 min and Dismiss, like the web push notification. The Done and Snooze actions
+     * are filtered by the user's preferences (task 6.2): showDone and showSnooze.
      */
-    val REMINDER_ACTIONS = listOf("done", "snooze", "dismiss")
+    fun reminderActions(context: Context): List<String> {
+        val prefs = Prefs(context)
+        val actions = mutableListOf<String>()
+        if (prefs.showDone) actions.add("done")
+        if (prefs.showSnooze) actions.add("snooze")
+        actions.add("dismiss")
+        return actions
+    }
 
     /** A location reminder's buttons (location-reminders D2): nothing to snooze. */
     val LOCATION_ACTIONS = listOf("done", "dismiss")

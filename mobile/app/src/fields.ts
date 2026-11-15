@@ -1,7 +1,8 @@
 // The task detail's fields (OpenSpec change rn-taskito-foundation, task 5.1):
 // the grouped rows the detail shows, and which collapse into one "Add…" row on
 // a fresh task. The rule is pure; the screen is the screen's.
-import type { Task } from '@shared/types'
+import type { Reminder, Task } from '@shared/types'
+import { reminderLabel } from './reminders'
 
 /** The rows of the task detail, in order. */
 export interface FieldRow {
@@ -11,16 +12,24 @@ export interface FieldRow {
 }
 
 /** The fields a task has set. */
-export function fieldRows(task: Task): FieldRow[] {
+export function fieldRows(task: Task, reminders?: Reminder[]): FieldRow[] {
   const rows: FieldRow[] = []
   rows.push({ kind: 'when', value: dueText(task) })
   rows.push({ kind: 'deadline', value: task.deadline ?? '' })
   rows.push({ kind: 'project', value: task.project_id ?? '' })
   rows.push({ kind: 'labels', value: (task.labels ?? []).join(', ') })
   rows.push({ kind: 'priority', value: task.priority === 4 ? '' : `p${task.priority}` })
-  rows.push({ kind: 'reminders', value: '' })
+  rows.push({ kind: 'reminders', value: reminderText(reminders) })
   rows.push({ kind: 'repeat', value: task.recurrence ?? '' })
   return rows
+}
+
+/** The reminder text: the first live reminder's label, or '' when none. */
+function reminderText(reminders?: Reminder[]): string {
+  if (!reminders || reminders.length === 0) return ''
+  const live = reminders.filter((r) => !r.deleted_at)
+  if (live.length === 0) return ''
+  return live.map((r) => reminderLabel(r)).join(', ')
 }
 
 /** The due text of a task, or ''. */

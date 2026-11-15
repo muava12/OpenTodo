@@ -144,7 +144,7 @@ object Notifier {
             .setAutoCancel(true)
             .setOnlyAlertOnce(true)
             .setContentIntent(open(context, ReminderSchedule.taskPath(taskId), notificationId(reminderId)))
-            .actions(context, reminderId, ReminderSchedule.REMINDER_ACTIONS)
+            .actions(context, reminderId, ReminderSchedule.reminderActions(context))
             .build()
         return try {
             NotificationManagerCompat.from(context).notify(notificationId(reminderId), n)

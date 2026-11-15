@@ -57,6 +57,33 @@ class Prefs(context: Context) {
         get() = p.getString("systemBars", null)
         set(v) = p.edit().putString("systemBars", v).apply()
 
+    // --- Notification settings (rn-taskito-foundation task 6.2) ---
+
+    /** Whether the sticky capture notification is shown ("Create tasks from notification"). */
+    var captureEnabled: Boolean
+        get() = p.getBoolean("captureEnabled", false)
+        set(v) = p.edit().putBoolean("captureEnabled", v).apply()
+
+    /** Whether the Snooze action appears on reminder notifications. */
+    var showSnooze: Boolean
+        get() = p.getBoolean("showSnooze", true)
+        set(v) = p.edit().putBoolean("showSnooze", v).apply()
+
+    /** The snooze length: "10m", "1h" or "tomorrow" (default "10m"). */
+    var snoozeLength: String
+        get() = p.getString("snoozeLength", "10m") ?: "10m"
+        set(v) = p.edit().putString("snoozeLength", v).apply()
+
+    /** Whether the Done action appears on reminder notifications. */
+    var showDone: Boolean
+        get() = p.getBoolean("showDone", true)
+        set(v) = p.edit().putBoolean("showDone", v).apply()
+
+    /** Whether a custom sound plays through the silent-twin channel. */
+    var customSound: Boolean
+        get() = p.getBoolean("customSound", false)
+        set(v) = p.edit().putBoolean("customSound", v).apply()
+
     /** The account key, AES-GCM encrypted under the biometric Keystore key: base64 iv and ciphertext. */
     var wrappedKey: Pair<String, String>?
         get() {

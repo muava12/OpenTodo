@@ -34,19 +34,19 @@ These tasks build what this change needs that `native-app-foundation` left open.
 
 - [x] 5.1 Build the task detail: in-place title, Markdown notes through the shared fold-in, field rows, subtasks, attachments (the platform viewer) and comments. Verify: a Jest round-trip test of every block type through the fold-in, and the Maestro `detail-edit` flow.
 - [x] 5.2 Build the date sheet (quick choices, the natural-language line, the system calendar, time, the recurrence presets and a custom rule), the searchable entity sheets and the priority menu. Verify: Jest tests for the typed date and recurrence rules, and the Maestro `schedule` flow.
-- [ ] 5.3 Build the reminder sheet (relative, absolute, the default reminders, the snooze length). Verify: the Jest tests of the offsets, and the Maestro `remind` flow.
+- [x] 5.3 Build the reminder sheet (relative, absolute, the default reminders, the snooze length). Verify: the Jest tests of the offsets, and the Maestro `remind` flow.
 
 ## 6. Notifications
 
 - [x] 6.1 Declare the four channels in `mobile/android` with their names and importances, and route the existing reminder notification through `reminders`. Verify: `make android` and an instrumented test that the channel and the id are those the reminder path uses.
-- [ ] 6.2 Add the user choices in Settings → Notifications: "Create tasks from notification", "Show snooze option" with a length, "Show Done action", and the custom sound through the silent-twin channel. Verify: Jest tests of the preference mapping, and the Maestro `notifications-settings` flow.
-- [ ] 6.3 Keep one notification per reminder, across the alarm and the push paths. Verify: the instrumented test that a push after an alarm does not alert again.
+- [x] 6.2 Add the user choices in Settings → Notifications: "Create tasks from notification", "Show snooze option" with a length, "Show Done action", and the custom sound through the silent-twin channel. Verify: Jest tests of the preference mapping, and the Maestro `notifications-settings` flow.
+- [x] 6.3 Keep one notification per reminder, across the alarm and the push paths. Verify: the instrumented test that a push after an alarm does not alert again.
 
 ## 7. The widget
 
 - [x] 7.1 Replace the static widget with a collection widget: the list, a checkbox per row, two sizes, the header and the quick-add footer. Verify: a draw test on the emulator, and a screenshot in light and dark.
 - [x] 7.2 Complete a task from the widget's checkbox through the app's own completion, queued when offline. Verify: the Maestro `widget-complete` flow, asserting the completion through the REST API.
-- [ ] 7.3 Publish the model from the app after a change, and refresh the widget on sign-in and sign-out. Verify: a Jest test of the publish payload, and the Maestro `widget-refresh` flow.
+- [x] 7.3 Publish the model from the app after a change, and refresh the widget on sign-in and sign-out. Verify: a Jest test of the publish payload, and the Maestro `widget-refresh` flow.
 
 ## 8. Docs and release
 
